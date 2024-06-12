@@ -19,6 +19,7 @@ This project helps to accelerate the creation of repetitive scripts in a Gin pro
 2. **Compile Project"**
 
     ```bash
+    cd gin-assistant
     go build
     ```
 
@@ -28,7 +29,7 @@ This project helps to accelerate the creation of repetitive scripts in a Gin pro
     mv ./gin-assistant ../<gin-project-name>
     ```
 
-4. **Create module **
+4. **Create module**
 
     ```bash
     go mod init <gin-project-name>
