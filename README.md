@@ -24,7 +24,7 @@ This project helps to accelerate the creation of repetitive scripts in a Gin pro
 3. **Copy the build output into the Gin project**
 
     ```bash
-    mv ./gin-assistant ../<gin-project-name>
+    mv gin-assistant ../<gin-project-name>
     ```
 
 4. **Create module**
