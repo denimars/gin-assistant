@@ -5,23 +5,12 @@ This project helps to accelerate the creation of repetitive scripts in a Gin pro
 ## Table of Contents
 
 - [Usage](#usage)
+- [Contributing](#contributing)
 - [License](#license)
+- [Contact](#contact)
 
 ## Usage
 
-1. **Clone the repository**
-    ```bash
-
-    ```
-
-### Prerequisites
-
-Make sure you have the following installed:
-
-- Node.js
-- npm (Node package manager)
-
-### Steps
 
 1. **Clone the repository:**
 
@@ -56,6 +45,7 @@ Make sure you have the following installed:
     ```
     ./gin-assistant service <nameService> 
     ```
+
 
 ## License
 
