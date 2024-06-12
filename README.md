@@ -2,8 +2,6 @@
 
 This project helps to accelerate the creation of repetitive scripts in a Gin project.
 
-## Table of Contents
-
 - [Usage](#usage)
 - [License](#license)
 
