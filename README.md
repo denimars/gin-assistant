@@ -5,9 +5,7 @@ This project helps to accelerate the creation of repetitive scripts in a Gin pro
 ## Table of Contents
 
 - [Usage](#usage)
-- [Contributing](#contributing)
 - [License](#license)
-- [Contact](#contact)
 
 ## Usage
 
