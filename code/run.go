@@ -1,0 +1,23 @@
+package code
+
+func Run() string {
+	return `
+package app
+
+import (
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+)
+
+func Run() {
+	//db := db.Connection()
+	//import your service in here...
+	router := gin.Default()
+	router.SetTrustedProxies(nil)
+	router.Use(cors.Default())
+	//api := router.Group("/api")
+	router.Run(":8080")
+
+}
+	`
+}
