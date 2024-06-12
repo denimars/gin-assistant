@@ -29,7 +29,11 @@ func main() {
 		case "init":
 			command.CreateInit(dir)
 		case "service":
-			command.Service(dir, args[1])
+			if len(args) >= 2 {
+				command.Service(dir, args[1])
+			}
+			fmt.Println("./gin-assistant service [nameService]")
+
 		default:
 			fmt.Println("command not found")
 		}

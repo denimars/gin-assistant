@@ -41,7 +41,7 @@ func CreateInit(dir string) {
 	if _, err := os.Stat(dir + "/" + "app"); os.IsNotExist(err) {
 		status, name := createDirectory(dir, "app")
 		installMinLibrary()
-		CreateFile(dir, "main_.go", code.MainCode(getProjectName(dir)))
+		CreateFile(dir, "main.go", code.MainCode(getProjectName(dir)))
 		if status {
 			dir = fmt.Sprintf("%v/%v", dir, name)
 			_, name = createDirectory(dir, "db")
@@ -64,10 +64,11 @@ func Service(dir string, serviceName string) {
 		if _, err = os.Stat(dir + "/app/service/" + serviceName); os.IsNotExist(err) {
 			status, name := createDirectory(dir+"/app/service/", serviceName)
 			if status {
-				CreateFile(dir+"/app/service/"+name, "repository.go", code.Repository(serviceName))
-				CreateFile(dir+"/app/service/"+name, "service.go", code.Service(serviceName))
-				CreateFile(dir+"/app/service/"+name, "handler.go", code.Handler(serviceName))
-				CreateFile(dir+"/app/service/"+name, "router.go", code.Router(serviceName))
+				dirService := dir + "/app/service/" + name
+				CreateFile(dirService, "repository.go", code.Repository(serviceName))
+				CreateFile(dirService, "service.go", code.Service(serviceName))
+				CreateFile(dirService, "handler.go", code.Handler(serviceName))
+				CreateFile(dirService, "router.go", code.Router(serviceName))
 			}
 
 		}

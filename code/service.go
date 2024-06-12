@@ -67,7 +67,7 @@ func Router(g *gin.RouterGroup, db *gorm.DB) {
 	// service := NewService(repository)
 	// handler := NewHandler(service)
 	
-	//` + nameService + ` := g.Group("")
+	//` + nameService + ` := g.Group("/` + strings.ToLower(nameService) + `")
 	// ` + nameService + `.GET("", handler.get)
 	
 }
