@@ -11,11 +11,11 @@ import (
 
 func Run() {
 	//db := db.Connection()
-	//import your service in here...
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
 	router.Use(cors.Default())
 	//api := router.Group("/api")
+	//import your service in here...
 	router.Run(":8080")
 
 }

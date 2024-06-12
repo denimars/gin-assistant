@@ -3,7 +3,7 @@ package code
 import "strings"
 
 func Repository(nameService string) string {
-	return `package ` + nameService + `
+	return `package ` + strings.ToLower(nameService) + `
 
 import (
 	"gorm.io/gorm"
@@ -25,7 +25,7 @@ func NewRepository(db *gorm.DB) *repository {
 }
 
 func Service(nameService string) string {
-	return `package ` + nameService + `
+	return `package ` + strings.ToLower(nameService) + `
 
 type Service interface {
 
@@ -42,7 +42,7 @@ func NewService(repository Repository) *service_ {
 }
 
 func Handler(nameService string) string {
-	return `package ` + nameService + `
+	return `package ` + strings.ToLower(nameService) + `
 
 type handler struct {
 	service_ Service
@@ -54,21 +54,21 @@ func NewHandler(service_ Service) *handler {
 	`
 }
 
-func Router(serviceName string) string {
-	return `package ` + serviceName + `
+func Router(nameService string) string {
+	return `package ` + strings.ToLower(nameService) + `
 
 import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
-func ` + strings.ToTitle(strings.ToLower(serviceName)) + `Router(g *gin.RouterGroup, db *gorm.DB) {
+func Router(g *gin.RouterGroup, db *gorm.DB) {
 	// repository := NewRepository(db)
 	// service := NewService(repository)
 	// handler := NewHandler(service)
 	
-	//project := g.Group("")
-	// project.GET("", handler.get)
+	//` + nameService + ` := g.Group("")
+	// ` + nameService + `.GET("", handler.get)
 	
 }
 	`
