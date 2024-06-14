@@ -28,8 +28,15 @@ func runCommand(command string) {
 }
 
 func installMinLibrary() {
-	package_ := []string{"github.com/joho/godotenv", "gorm.io/driver/mysql", "gorm.io/gorm",
-		"gorm.io/gorm/logger", "github.com/google/uuid", "github.com/go-playground/validator/v10", "github.com/gin-contrib/cors", "github.com/gin-gonic/gin",
+	package_ := []string{
+		"github.com/joho/godotenv",
+		"gorm.io/driver/mysql",
+		"gorm.io/gorm",
+		"gorm.io/gorm/logger",
+		"github.com/google/uuid",
+		"github.com/go-playground/validator/v10",
+		"github.com/gin-contrib/cors",
+		"github.com/gin-gonic/gin",
 	}
 
 	for _, p := range package_ {
