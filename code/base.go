@@ -24,7 +24,7 @@ func (b *BaseModel) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 type Response struct {
-	DeletedAt gorm.DeletedAt ` + `json:"-"
+	DeletedAt gorm.DeletedAt ` + "`" + `json:"-"` + "`" + `
 }
 	`
 }
