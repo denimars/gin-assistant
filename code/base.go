@@ -22,5 +22,9 @@ func (b *BaseModel) BeforeCreate(tx *gorm.DB) (err error) {
 	b.ID = uuid.New().String()
 	return
 }
+
+type Response struct {
+	DeletedAt gorm.DeletedAt ` + `json:"-"
+}
 	`
 }
