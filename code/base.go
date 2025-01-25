@@ -5,9 +5,14 @@ func Base() string {
 package service
 
 import (
+	"bytes"
+	"encoding/json"
+	"net/http"
 	"time"
 
-	"github.com/google/uuid"
+	"github.com/gin-gonic/gin"
+	"github.com/oklog/ulid/v2"
+	"golang.org/x/exp/rand"
 	"gorm.io/gorm"
 )
 
@@ -19,12 +24,32 @@ type BaseModel struct {
 }
 
 func (b *BaseModel) BeforeCreate(tx *gorm.DB) (err error) {
-	b.ID = uuid.New().String()
+	id, _ := ulid.New(ulid.Timestamp(time.Now()), rand.New(rand.NewSource(uint64(time.Now().UnixNano()))))
+	b.ID = id.String()
 	return
 }
 
-type Response struct {
-	DeletedAt gorm.DeletedAt ` + "`" + `json:"-"` + "`" + `
+func CustomJson(c *gin.Context, status int, obj interface{}) {
+	c.Header("Content-Type", "application/json; charset=utf-8")
+	c.Status(status)
+
+	buffer := &bytes.Buffer{}
+	encoder := json.NewEncoder(buffer)
+	encoder.SetEscapeHTML(false) // Disable HTML escaping
+	if err := encoder.Encode(obj); err != nil {
+		http.Error(c.Writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	c.Writer.Write(buffer.Bytes())
+}
+
+func JSON(c *gin.Context, err error, data interface{}) {
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "uuups..."})
+		return
+	}
+	c.JSON(http.StatusOK, data)
 }
 	`
 }
