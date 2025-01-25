@@ -16,11 +16,11 @@ import (
 
 func errorMessage(e validator.FieldError) map[string]interface{} {
 	if e.ActualTag() == "required" {
-		return map[string]interface{}{strings.ToLower(string(e.Field())): "tidak boleh kosong!"}
+		return map[string]interface{}{strings.ToLower(string(e.Field())): "not null!"}
 	} else if e.ActualTag() == "min" || e.ActualTag() == "max" {
-		return map[string]interface{}{strings.ToLower(string(e.Field())): fmt.Sprintf("%v %v karakter!", strings.ToLower(e.ActualTag()), e.Param())}
+		return map[string]interface{}{strings.ToLower(string(e.Field())): fmt.Sprintf("%v %v char!", strings.ToLower(e.ActualTag()), e.Param())}
 	} else if e.ActualTag() == "email" {
-		return map[string]interface{}{strings.ToLower(string(e.Field())): "format harus dalam bentuk email!"}
+		return map[string]interface{}{strings.ToLower(string(e.Field())): "must be email!"}
 	} else {
 		return map[string]interface{}{strings.ToLower(string(e.Field())): "uups"}
 	}
