@@ -98,6 +98,23 @@ func hashPassword(dir string) {
 	}
 }
 
-func Auth(dir string) {
+func middleware(dir string, projectName string) {
+	if _, err := os.Stat(dir + "/" + "app"); os.IsNotExist(err) {
+		fmt.Println("init before middleware")
+	} else {
+		if _, err = os.Stat(dir + "/app/middleware"); os.IsNotExist(err) {
+			status, name := createDirectory(dir+"/app", "middleware")
+			if status {
+				dirHalper := dir + "/app/" + name
+				CreateFile(dirHalper, "middleware.go", strings.TrimSpace(code.Middleware(projectName)))
+				CreateFile(dirHalper, "model.go", strings.TrimSpace(code.ModelBlackListToken(projectName)))
+				CreateFile(dirHalper, "repository.go", strings.TrimSpace(code.RepositoryBlackListToken()))
+			}
+		}
+	}
+}
+
+func Auth(dir string, projectName string) {
 	hashPassword(dir)
+	middleware(dir, projectName)
 }

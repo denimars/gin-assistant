@@ -1,13 +1,11 @@
 package code
 
-import "strings"
-
-func Middleware() string {
+func Middleware(projectName string) string {
 	return `
 package middleware
 
 import (
-	"diya-bootcamp-be/app/helper"
+	"` + projectName + `/app/helper"
 
 	"net/http"
 
@@ -72,11 +70,11 @@ func (m *middleware) AuthMiddleware() gin.HandlerFunc {
 	`
 }
 
-func Model(dir string) string {
+func ModelBlackListToken(projectName string) string {
 	return `
 package middleware
 
-import ` + strings.ToLower(dir) + `/app/service"
+import "` + projectName + `/app/service"
 
 type BlacklistToken struct {
 	service.BaseModel
@@ -86,5 +84,40 @@ type BlacklistToken struct {
 func (BlacklistToken) TableName() string {
 	return "blacklist_tokens"
 }
+	`
+}
+
+func RepositoryBlackListToken() string {
+	return `
+package middleware
+
+import "gorm.io/gorm"
+
+type Repository interface {
+	FindToken(token string) BlacklistToken
+	Save(token string) error
+}
+
+type repository struct {
+	db *gorm.DB
+}
+
+func NewRepository(db *gorm.DB) *repository {
+	return &repository{db}
+}
+
+func (r *repository) FindToken(token string) BlacklistToken {
+	var blackListToken BlacklistToken
+	r.db.Where("token = ?", token).Find(&blackListToken)
+	return blackListToken
+}
+
+func (r *repository) Save(token string) error {
+	err := r.db.Create(&BlacklistToken{
+		Token: token,
+	}).Error
+	return err
+}
+
 	`
 }
