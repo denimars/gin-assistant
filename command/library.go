@@ -15,9 +15,6 @@ func getProjectName(dir string) string {
 }
 
 func runCommand(command string) {
-	// splitCommand := strings.Split(command, " ")
-	// fmt.Println(splitCommand)
-	// cmd := exec.Command("go", splitCommand...)
 	cmd := exec.Command("go", "get", command)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
@@ -39,6 +36,8 @@ func installMinLibrary() {
 		"github.com/gin-gonic/gin",
 		"github.com/oklog/ulid/v2",
 		"golang.org/x/exp/rand",
+		"github.com/golang-jwt/jwt",
+		"golang.org/x/crypto/bcrypt",
 	}
 
 	for _, p := range package_ {
@@ -82,4 +81,23 @@ func Service(dir string, serviceName string) {
 
 		}
 	}
+}
+
+func hashPassword(dir string) {
+	if _, err := os.Stat(dir + "/" + "app"); os.IsNotExist(err) {
+		fmt.Println("init before middleware")
+	} else {
+		if _, err = os.Stat(dir + "/app/helper"); os.IsNotExist(err) {
+			status, name := createDirectory(dir+"/app", "helper")
+			if status {
+				dirHalper := dir + "/app/" + name
+				CreateFile(dirHalper, "hashPassword.go", strings.TrimSpace(code.HashPassword()))
+				CreateFile(dirHalper, "token.go", strings.TrimSpace(code.Token()))
+			}
+		}
+	}
+}
+
+func Auth(dir string) {
+	hashPassword(dir)
 }

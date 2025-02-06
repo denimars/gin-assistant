@@ -34,7 +34,8 @@ func main() {
 			} else {
 				fmt.Println("./gin-assistant service [nameService]")
 			}
-
+		case "auth":
+			command.Auth(dir)
 		default:
 			fmt.Println("command not found")
 		}
