@@ -27,17 +27,13 @@ This project helps to accelerate the creation of repetitive scripts in a Gin pro
     mv gin-assistant ../<gin-project-name>
     ```
 
-4. **Create module**
 
-    ```bash
-    go mod init <gin-project-name>
-    ```
-5. **Create project with gin-assistant**
+4. **Create project with gin-assistant**
 
     ```bash
     ./gin-assistant init
     ```
-6. **Create service**
+5. **Create service**
 
     ```
     ./gin-assistant service <nameService> 
