@@ -132,4 +132,5 @@ func Auth(dir string) {
 	projectName := getProjectName(dir)
 	hashPassword(dir)
 	middleware(dir, projectName)
+	addBlackListToken(dir+"/app/db/connection.go", getProjectName(dir))
 }

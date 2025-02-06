@@ -13,10 +13,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
+	"github.com/joho/godotenv"
 )
 
 func GenerateToken(id string) (string, error) {
-	LoadEnv()
+	godotenv.Load()
 	token_lifespan, err := strconv.Atoi(os.Getenv("TOKEN_LIFESPAN"))
 	if err != nil {
 		return "", err
@@ -39,7 +40,7 @@ func GetToken(c *gin.Context) string {
 }
 
 func TokenValidate(c *gin.Context) (*jwt.Token, error) {
-	LoadEnv()
+	godotenv.Load()
 	tokenString := GetToken(c)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -52,7 +53,7 @@ func TokenValidate(c *gin.Context) (*jwt.Token, error) {
 }
 
 func GetTokenId(c *gin.Context) (string, error) {
-	LoadEnv()
+	godotenv.Load()
 	tokenString := GetToken(c)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
