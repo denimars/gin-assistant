@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"gin-assistant/command"
 	"os"
-	"strings"
 )
 
 /**
@@ -26,8 +25,6 @@ func main() {
 	if len(args) > 0 {
 		command_ := args[0]
 		dir, _ := os.Getwd()
-		splitDir := strings.Split(dir, "/")
-		projectName := splitDir[len(splitDir)-1]
 		switch command_ {
 		case "init":
 			command.CreateInit(dir)
@@ -38,7 +35,7 @@ func main() {
 				fmt.Println("./gin-assistant service [nameService]")
 			}
 		case "auth":
-			command.Auth(dir, projectName)
+			command.Auth(dir)
 		default:
 			fmt.Println("command not found")
 		}

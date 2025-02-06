@@ -14,6 +14,17 @@ func getProjectName(dir string) string {
 	return splitFolder[len(splitFolder)-1]
 }
 
+func initProject(projectName string) {
+	cmd := exec.Command("go", "mod", "init", projectName)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println(err)
+		panic("uups....")
+	}
+	fmt.Println(string(output))
+
+}
+
 func runCommand(command string) {
 	cmd := exec.Command("go", "get", command)
 	output, err := cmd.CombinedOutput()
@@ -46,10 +57,13 @@ func installMinLibrary() {
 }
 
 func CreateInit(dir string) {
+	projectName := getProjectName(dir)
+	initProject(projectName)
+
 	if _, err := os.Stat(dir + "/" + "app"); os.IsNotExist(err) {
 		status, name := createDirectory(dir, "app")
 		installMinLibrary()
-		CreateFile(dir, "main.go", code.MainCode(getProjectName(dir)))
+		CreateFile(dir, "main.go", code.MainCode(projectName))
 		if status {
 			dir = fmt.Sprintf("%v/%v", dir, name)
 			_, name = createDirectory(dir, "db")
@@ -114,7 +128,8 @@ func middleware(dir string, projectName string) {
 	}
 }
 
-func Auth(dir string, projectName string) {
+func Auth(dir string) {
+	projectName := getProjectName(dir)
 	hashPassword(dir)
 	middleware(dir, projectName)
 }
