@@ -63,15 +63,15 @@ func CreateInit(dir string) {
 	if _, err := os.Stat(dir + "/" + "app"); os.IsNotExist(err) {
 		status, name := createDirectory(dir, "app")
 		installMinLibrary()
-		CreateFile(dir, "main.go", code.MainCode(projectName))
+		CreateFile(dir, "main.go", strings.TrimSpace(code.MainCode(projectName)))
 		if status {
 			dir = fmt.Sprintf("%v/%v", dir, name)
 			_, name = createDirectory(dir, "db")
-			CreateFile(fmt.Sprintf("%v/%v", dir, name), "connection.go", code.FileConnection())
+			CreateFile(fmt.Sprintf("%v/%v", dir, name), "connection.go", strings.TrimSpace(code.FileConnection()))
 			_, name = createDirectory(dir, "service")
-			CreateFile(fmt.Sprintf("%v/%v", dir, name), "base.go", code.Base())
-			CreateFile(fmt.Sprintf("%v/%v", dir, name), "validator.go", code.Validation())
-			CreateFile(fmt.Sprintf("%v/", dir), "run.go", code.Run())
+			CreateFile(fmt.Sprintf("%v/%v", dir, name), "base.go", strings.TrimSpace(code.Base()))
+			CreateFile(fmt.Sprintf("%v/%v", dir, name), "validator.go", strings.TrimSpace(code.Validation()))
+			CreateFile(fmt.Sprintf("%v/", dir), "run.go", strings.TrimSpace(code.Run()))
 		}
 	} else {
 		fmt.Println("app exist...")
@@ -87,10 +87,10 @@ func Service(dir string, serviceName string) {
 			status, name := createDirectory(dir+"/app/service/", serviceName)
 			if status {
 				dirService := dir + "/app/service/" + name
-				CreateFile(dirService, "repository.go", code.Repository(serviceName))
-				CreateFile(dirService, "service.go", code.Service(serviceName))
-				CreateFile(dirService, "handler.go", code.Handler(serviceName))
-				CreateFile(dirService, "router.go", code.Router(serviceName))
+				CreateFile(dirService, "repository.go", strings.TrimSpace(code.Repository(serviceName)))
+				CreateFile(dirService, "service.go", strings.TrimSpace(code.Service(serviceName)))
+				CreateFile(dirService, "handler.go", strings.TrimSpace(code.Handler(serviceName)))
+				CreateFile(dirService, "router.go", strings.TrimSpace(code.Router(serviceName)))
 			}
 
 		}
