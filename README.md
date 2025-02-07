@@ -43,6 +43,11 @@ This project helps to accelerate the creation of repetitive scripts in a Gin pro
     ```
     ./gin-assistant auth
     ```
+7. **Run Project**
+    ```
+    ./gin-assistant run
+    ```
+
 
 
 ## License
