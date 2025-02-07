@@ -128,6 +128,15 @@ func debounceRestart() {
 	debounceTimer = time.AfterFunc(1*time.Second, run)
 }
 
+func setPort(args []string) {
+	if len(args) >= 2 {
+		serverPort = args[1]
+		return
+	}
+
+	serverPort = "8080"
+}
+
 func main() {
 	flag.Parse()
 	args := flag.Args()
@@ -146,13 +155,10 @@ func main() {
 		case "auth":
 			command.Auth(dir)
 		case "run":
-			fmt.Println("--------")
-			serverPort = "8080"
-			if len(args) == 2 {
-				serverPort = args[1]
-			}
+			setPort(args)
+			fmt.Println("_____")
 			fmt.Println(serverPort)
-			fmt.Println("--------")
+			fmt.Println("_____")
 			watcher, err := fsnotify.NewWatcher()
 			if err != nil {
 				log.Fatal(err)
