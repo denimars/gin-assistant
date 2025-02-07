@@ -21,7 +21,8 @@ var cmd *exec.Cmd
 var mutex sync.Mutex
 var debounceTimer *time.Timer
 
-const serverPort = "8080"
+// const serverPort = "8080"
+var serverPort string
 
 func stopServer() {
 	if cmd != nil && cmd.Process != nil {
@@ -145,6 +146,13 @@ func main() {
 		case "auth":
 			command.Auth(dir)
 		case "run":
+			fmt.Println("--------")
+			serverPort = "8080"
+			if len(args) == 2 {
+				serverPort = args[1]
+			}
+			fmt.Println(serverPort)
+			fmt.Println("--------")
 			watcher, err := fsnotify.NewWatcher()
 			if err != nil {
 				log.Fatal(err)
