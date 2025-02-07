@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"strings"
 	"sync"
 	"syscall"
@@ -128,13 +129,18 @@ func debounceRestart() {
 	debounceTimer = time.AfterFunc(1*time.Second, run)
 }
 
-func setPort(args []string) {
+func setPort(args []string) bool {
 	if len(args) >= 2 {
-		serverPort = args[1]
-		return
+		port := args[1]
+		if num, err := strconv.Atoi(port); err == nil && num >= 7000 && num <= 9999 {
+			serverPort = port
+			return true
+		}
+		fmt.Println("Port must be a number between 7000 - 9999")
+		return false
 	}
-
 	serverPort = "8080"
+	return true
 }
 
 func main() {
@@ -155,52 +161,51 @@ func main() {
 		case "auth":
 			command.Auth(dir)
 		case "run":
-			setPort(args)
-			fmt.Println("_____")
-			fmt.Println(serverPort)
-			fmt.Println("_____")
-			watcher, err := fsnotify.NewWatcher()
-			if err != nil {
-				log.Fatal(err)
-			}
-			defer watcher.Close()
+			port := setPort(args)
+			if port {
+				watcher, err := fsnotify.NewWatcher()
+				if err != nil {
+					log.Fatal(err)
+				}
+				defer watcher.Close()
 
-			projectDir := "."
-			err = watchFiles(watcher, projectDir)
-			if err != nil {
-				log.Fatal(err)
-			}
+				projectDir := "."
+				err = watchFiles(watcher, projectDir)
+				if err != nil {
+					log.Fatal(err)
+				}
 
-			fmt.Println("🚀 Starting server...")
-			run()
+				fmt.Println("🚀 Starting server...")
+				run()
 
-			fmt.Println("🚀 Watching for file changes...")
-			for {
-				select {
-				case event, ok := <-watcher.Events:
-					if !ok {
-						return
-					}
+				fmt.Println("🚀 Watching for file changes...")
+				for {
+					select {
+					case event, ok := <-watcher.Events:
+						if !ok {
+							return
+						}
 
-					fmt.Println("🔄 File changed:", event.Name)
+						fmt.Println("🔄 File changed:", event.Name)
 
-					if event.Op&fsnotify.Create != 0 {
-						fileInfo, err := os.Stat(event.Name)
-						if err == nil && fileInfo.IsDir() {
-							fmt.Println("📂 New folder detected, adding to watcher:", event.Name)
-							err := watcher.Add(event.Name)
-							if err != nil {
-								fmt.Println("❌ Error adding new folder to watcher:", err)
+						if event.Op&fsnotify.Create != 0 {
+							fileInfo, err := os.Stat(event.Name)
+							if err == nil && fileInfo.IsDir() {
+								fmt.Println("📂 New folder detected, adding to watcher:", event.Name)
+								err := watcher.Add(event.Name)
+								if err != nil {
+									fmt.Println("❌ Error adding new folder to watcher:", err)
+								}
 							}
 						}
-					}
 
-					debounceRestart()
-				case err, ok := <-watcher.Errors:
-					if !ok {
-						return
+						debounceRestart()
+					case err, ok := <-watcher.Errors:
+						if !ok {
+							return
+						}
+						fmt.Println("❌ read file error:", err)
 					}
-					fmt.Println("❌ Watcher error:", err)
 				}
 			}
 		default:
