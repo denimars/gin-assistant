@@ -44,8 +44,13 @@ This project helps to accelerate the creation of repetitive scripts in a Gin pro
     ./gin-assistant auth
     ```
 7. **Run Project**
+    To run with the default port (8080)
     ```
     ./gin-assistant run
+    ```
+    To run with a specific port
+    ```
+    ./gin-assistant run 9000
     ```
 
 
