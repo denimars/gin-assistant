@@ -9,7 +9,7 @@ import (
 
 var dir string
 
-func readFile(projectName string) []string {
+func readFile(searchFile string, fixedFile string, isALl bool) []string {
 	var result []string
 	file, err := os.Open(dir)
 	if err != nil {
@@ -19,20 +19,23 @@ func readFile(projectName string) []string {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()
-		if strings.Contains(line, "db.AutoMigrate(") {
-			modifiedLine := strings.Replace(line, "db.AutoMigrate(", "db.AutoMigrate(\n  middleware.BlacklistToken{},", 1)
-			result = append(result, modifiedLine)
-		} else if strings.Contains(line, "import (") {
-			modifiedLine := strings.Replace(line, "import (", "import (\n  \""+projectName+"/app/middleware\"", 1)
-			result = append(result, modifiedLine)
+		if strings.Contains(line, searchFile) {
+			if isALl {
+				result = append(result, fixedFile)
+			} else {
+				modifiedLine := strings.Replace(line, searchFile, fixedFile, 1)
+				result = append(result, modifiedLine)
+			}
+
 		} else {
 			result = append(result, line)
 		}
+
 	}
 	return result
 }
 
-func reWriteConnection(content []string) {
+func reWriteFile(content []string) {
 	connection, err := os.Create(dir)
 	if err != nil {
 		fmt.Println("error open file")
@@ -50,6 +53,15 @@ func reWriteConnection(content []string) {
 
 func addBlackListToken(file string, projectName string) {
 	dir = file
-	newFile := readFile(projectName)
-	reWriteConnection(newFile)
+	addBlackListToken := readFile("db.AutoMigrate(", "db.AutoMigrate(\n  middleware.BlacklistToken{},", false)
+	reWriteFile(addBlackListToken)
+	addImportFile := readFile("import (", "import (\n  \""+projectName+"/app/middleware\"", false)
+	reWriteFile(addImportFile)
+}
+
+func ReWritePort(port string, file string) {
+	dir = fmt.Sprintf("%v/app/run.go", file)
+	newPort := fmt.Sprintf("router.Run(\":%v\")", port)
+	addNewPort := readFile("router.Run(\"", newPort, true)
+	reWriteFile(addNewPort)
 }

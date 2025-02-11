@@ -162,14 +162,20 @@ func main() {
 			command.Auth(dir)
 		case "run":
 			port := setPort(args)
+
 			if port {
+				fmt.Println("****")
+				fmt.Println(serverPort)
+				fmt.Println(dir)
+				fmt.Println("****")
+				command.ReWritePort(serverPort, dir)
 				watcher, err := fsnotify.NewWatcher()
 				if err != nil {
 					log.Fatal(err)
 				}
 				defer watcher.Close()
 
-				projectDir := "."
+				projectDir := "./app"
 				err = watchFiles(watcher, projectDir)
 				if err != nil {
 					log.Fatal(err)
