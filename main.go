@@ -21,30 +21,32 @@ import (
 var cmd *exec.Cmd
 var mutex sync.Mutex
 var debounceTimer *time.Timer
-
-// const serverPort = "8080"
 var serverPort string
 
 func stopServer() {
 	if cmd != nil && cmd.Process != nil {
 		fmt.Println("🛑 Stopping server...")
-
-		err := cmd.Process.Signal(syscall.SIGTERM)
-		if err != nil {
-			fmt.Println("⚠️ Error sending SIGTERM:", err)
+		if runtime.GOOS == "windows" {
+			err := cmd.Process.Kill()
+			if err != nil {
+				fmt.Println("❌ Error killing process:", err)
+			}
+		} else {
+			err := cmd.Process.Signal(syscall.SIGTERM)
+			if err != nil {
+				fmt.Println("⚠️ Error sending SIGTERM:", err)
+			}
+			_, _ = cmd.Process.Wait()
 		}
-
-		_, _ = cmd.Process.Wait()
 
 		if processExists(cmd.Process.Pid) {
 			fmt.Println("⚠️ Force killing process...")
-			err = cmd.Process.Kill()
+			err := cmd.Process.Kill()
 			if err != nil {
 				fmt.Println("❌ Error force killing process:", err)
 			}
 		}
 	}
-
 	freePort(serverPort)
 }
 
@@ -73,7 +75,6 @@ func freePortWindows(port string) {
 		fmt.Println("⚠️ Error checking port:", err)
 		return
 	}
-
 	lines := strings.Split(string(output), "\n")
 	for _, line := range lines {
 		fields := strings.Fields(line)
@@ -94,16 +95,12 @@ func freePortUnix(port string) {
 func run() {
 	mutex.Lock()
 	defer mutex.Unlock()
-
 	stopServer()
-
 	time.Sleep(1 * time.Second)
-
 	cmd = exec.Command("go", "run", "main.go")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	err := cmd.Start()
-	if err != nil {
+	if err := cmd.Start(); err != nil {
 		log.Fatalf("❌ Failed to start server: %v", err)
 	}
 	fmt.Println("🚀 Server restarted at", time.Now())
@@ -161,29 +158,20 @@ func main() {
 		case "auth":
 			command.Auth(dir)
 		case "run":
-			port := setPort(args)
-
-			if port {
-				fmt.Println("****")
-				fmt.Println(serverPort)
-				fmt.Println(dir)
-				fmt.Println("****")
+			if setPort(args) {
+				fmt.Println("****\n", serverPort, "\n", dir, "\n****")
 				command.ReWritePort(serverPort, dir)
 				watcher, err := fsnotify.NewWatcher()
 				if err != nil {
 					log.Fatal(err)
 				}
 				defer watcher.Close()
-
 				projectDir := command.PathNormalization("./app")
-				err = watchFiles(watcher, projectDir)
-				if err != nil {
+				if err := watchFiles(watcher, projectDir); err != nil {
 					log.Fatal(err)
 				}
-
 				fmt.Println("🚀 Starting server...")
 				run()
-
 				fmt.Println("🚀 Watching for file changes...")
 				for {
 					select {
@@ -191,20 +179,15 @@ func main() {
 						if !ok {
 							return
 						}
-
 						fmt.Println("🔄 File changed:", event.Name)
-
 						if event.Op&fsnotify.Create != 0 {
-							fileInfo, err := os.Stat(event.Name)
-							if err == nil && fileInfo.IsDir() {
+							if fileInfo, err := os.Stat(event.Name); err == nil && fileInfo.IsDir() {
 								fmt.Println("📂 New folder detected, adding to watcher:", event.Name)
-								err := watcher.Add(event.Name)
-								if err != nil {
+								if err := watcher.Add(event.Name); err != nil {
 									fmt.Println("❌ Error adding new folder to watcher:", err)
 								}
 							}
 						}
-
 						debounceRestart()
 					case err, ok := <-watcher.Errors:
 						if !ok {

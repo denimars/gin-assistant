@@ -3,6 +3,7 @@ package command
 import (
 	"fmt"
 	"gin-assistant/code"
+	"runtime"
 
 	"os"
 	"os/exec"
@@ -10,7 +11,14 @@ import (
 )
 
 func getProjectName(dir string) string {
-	splitFolder := strings.Split(dir, "/")
+	var splitFolder []string
+	switch runtime.GOOS {
+	case "windows":
+		splitFolder = strings.Split(dir, "\\")
+	default:
+		splitFolder = strings.Split(dir, "/")
+	}
+
 	return splitFolder[len(splitFolder)-1]
 }
 
