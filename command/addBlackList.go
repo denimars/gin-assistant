@@ -60,7 +60,7 @@ func addBlackListToken(file string, projectName string) {
 }
 
 func ReWritePort(port string, file string) {
-	dir = fmt.Sprintf("%v/app/run.go", file)
+	dir = PathNormalization(fmt.Sprintf("%v/app/run.go", file))
 	newPort := fmt.Sprintf("router.Run(\":%v\")", port)
 	addNewPort := readFile("router.Run(\"", newPort, true)
 	reWriteFile(addNewPort)

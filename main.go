@@ -175,7 +175,7 @@ func main() {
 				}
 				defer watcher.Close()
 
-				projectDir := "./app"
+				projectDir := command.PathNormalization("./app")
 				err = watchFiles(watcher, projectDir)
 				if err != nil {
 					log.Fatal(err)

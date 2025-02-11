@@ -7,7 +7,7 @@ import (
 
 func CreateFile(dir string, fileName string, text string) {
 	fmt.Println(dir)
-	file, err := os.Create(fmt.Sprintf("%v/%v", dir, fileName))
+	file, err := os.Create(fmt.Sprintf("%v/%v", PathNormalization(dir), fileName))
 	if err != nil {
 		panic(err)
 	}
