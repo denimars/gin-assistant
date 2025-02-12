@@ -2,8 +2,12 @@ package code
 
 import "strings"
 
-func Repository(nameService string) string {
-	return `package ` + strings.ToLower(nameService) + `
+func claerPackageName(serviceName string) string {
+	return strings.NewReplacer(".", "", "/", "", "\\", "", "-", "").Replace(strings.ToLower(serviceName))
+}
+
+func Repository(serviceName string) string {
+	return `package ` + claerPackageName(serviceName) + `
 
 import (
 	"gorm.io/gorm"
@@ -24,8 +28,8 @@ func NewRepository(db *gorm.DB) *repository {
 
 }
 
-func Service(nameService string) string {
-	return `package ` + strings.ToLower(nameService) + `
+func Service(serviceName string) string {
+	return `package ` + claerPackageName(serviceName) + `
 
 type Service interface {
 
@@ -41,8 +45,8 @@ func NewService(repository Repository) *service_ {
 `
 }
 
-func Handler(nameService string) string {
-	return `package ` + strings.ToLower(nameService) + `
+func Handler(serviceName string) string {
+	return `package ` + claerPackageName(serviceName) + `
 
 type handler struct {
 	service_ Service
@@ -54,8 +58,8 @@ func NewHandler(service_ Service) *handler {
 	`
 }
 
-func Router(nameService string) string {
-	return `package ` + strings.ToLower(nameService) + `
+func Router(serviceName string) string {
+	return `package ` + claerPackageName(serviceName) + `
 
 import (
 	"github.com/gin-gonic/gin"
@@ -67,8 +71,8 @@ func Router(g *gin.RouterGroup, db *gorm.DB) {
 	// service := NewService(repository)
 	// handler := NewHandler(service)
 	
-	//` + nameService + ` := g.Group("/` + strings.ToLower(nameService) + `")
-	// ` + nameService + `.GET("", handler.get)
+	//` + serviceName + ` := g.Group("/` + strings.ToLower(serviceName) + `")
+	// ` + serviceName + `.GET("", handler.get)
 	
 }
 	`
