@@ -52,11 +52,11 @@ func installMinLibrary() {
 		"github.com/google/uuid",
 		"github.com/go-playground/validator/v10",
 		"github.com/gin-contrib/cors",
-		"github.com/gin-gonic/gin",
 		"github.com/oklog/ulid/v2",
 		"golang.org/x/exp/rand",
 		"github.com/golang-jwt/jwt",
 		"golang.org/x/crypto/bcrypt",
+		"github.com/gin-gonic/gin",
 	}
 
 	for _, p := range package_ {
@@ -67,10 +67,8 @@ func installMinLibrary() {
 func CreateInit(dir string) {
 	projectName := getProjectName(dir)
 	initProject(projectName)
-
 	if _, err := os.Stat(dir + "/" + "app"); os.IsNotExist(err) {
 		status, name := createDirectory(dir, "app")
-		installMinLibrary()
 		CreateFile(dir, "main.go", strings.TrimSpace(code.MainCode(projectName)))
 		if status {
 			dir = fmt.Sprintf("%v/%v", dir, name)
@@ -81,6 +79,7 @@ func CreateInit(dir string) {
 			CreateFile(fmt.Sprintf("%v/%v", dir, name), "validator.go", strings.TrimSpace(code.Validation()))
 			CreateFile(fmt.Sprintf("%v/", dir), "run.go", strings.TrimSpace(code.Run()))
 		}
+		installMinLibrary()
 	} else {
 		fmt.Println("app exist...")
 	}
