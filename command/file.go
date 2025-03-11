@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func CreateFile(dir string, fileName string, text string) {
+func createFile(dir string, fileName string, text string) {
 	path := fmt.Sprintf("%v/%v", dir, fileName)
 	file, err := os.Create(PathNormalization(path))
 	if err != nil {

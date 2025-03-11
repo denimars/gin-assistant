@@ -71,15 +71,15 @@ func CreateInit(dir string) {
 	path := fmt.Sprintf("%v/%v", dir, "app")
 	if _, err := os.Stat(PathNormalization(path)); os.IsNotExist(err) {
 		status := createDirectory(PathNormalization(path), "app")
-		CreateFile(PathNormalization(dir), "main.go", strings.TrimSpace(code.MainCode(projectName)))
+		createFile(PathNormalization(dir), "main.go", strings.TrimSpace(code.MainCode(projectName)))
 		if status {
 			createDirectory(PathNormalization(fmt.Sprintf("%v/%v", path, "db")), "db")
-			CreateFile(PathNormalization(fmt.Sprintf("%v/%v", path, "db")), "connection.go", strings.TrimSpace(code.FileConnection()))
-			CreateFile(PathNormalization(path), "run.go", strings.TrimSpace(code.Run()))
+			createFile(PathNormalization(fmt.Sprintf("%v/%v", path, "db")), "connection.go", strings.TrimSpace(code.FileConnection()))
+			createFile(PathNormalization(path), "run.go", strings.TrimSpace(code.Run()))
 			path = fmt.Sprintf("%v/%v", path, "service")
 			createDirectory(PathNormalization(path), "service")
-			CreateFile(PathNormalization(path), "base.go", strings.TrimSpace(code.Base()))
-			CreateFile(PathNormalization(path), "validator.go", strings.TrimSpace(code.Validation()))
+			createFile(PathNormalization(path), "base.go", strings.TrimSpace(code.Base()))
+			createFile(PathNormalization(path), "validator.go", strings.TrimSpace(code.Validation()))
 		}
 		installMinLibrary()
 	} else {
@@ -100,10 +100,10 @@ func Service(dir string, serviceName string) {
 			if _, err = os.Stat(PathNormalization(path)); os.IsNotExist(err) {
 				status := createDirectory(path, serviceNameSplit[i])
 				if status && (len(serviceNameSplit)-1 == i) {
-					CreateFile(path, "repository.go", strings.TrimSpace(code.Repository(serviceName)))
-					CreateFile(path, "service.go", strings.TrimSpace(code.Service(serviceName)))
-					CreateFile(path, "handler.go", strings.TrimSpace(code.Handler(serviceName)))
-					CreateFile(path, "router.go", strings.TrimSpace(code.Router(serviceName)))
+					createFile(path, "repository.go", strings.TrimSpace(code.Repository(serviceName)))
+					createFile(path, "service.go", strings.TrimSpace(code.Service(serviceName)))
+					createFile(path, "handler.go", strings.TrimSpace(code.Handler(serviceName)))
+					createFile(path, "router.go", strings.TrimSpace(code.Router(serviceName)))
 				}
 
 			}
@@ -119,8 +119,8 @@ func hashPassword(dir string) {
 		path = fmt.Sprintf("%v/%v", path, "helper")
 		status := createDirectory(PathNormalization(path), "helper")
 		if status {
-			CreateFile(path, "hashPassword.go", strings.TrimSpace(code.HashPassword()))
-			CreateFile(path, "token.go", strings.TrimSpace(code.Token()))
+			createFile(path, "hashPassword.go", strings.TrimSpace(code.HashPassword()))
+			createFile(path, "token.go", strings.TrimSpace(code.Token()))
 		}
 
 	}
@@ -135,9 +135,9 @@ func middleware(dir string, projectName string) {
 		if _, err = os.Stat(PathNormalization(path)); os.IsNotExist(err) {
 			status := createDirectory(PathNormalization(path), projectName)
 			if status {
-				CreateFile(path, "middleware.go", strings.TrimSpace(code.Middleware(projectName)))
-				CreateFile(path, "model.go", strings.TrimSpace(code.ModelBlackListToken(projectName)))
-				CreateFile(path, "repository.go", strings.TrimSpace(code.RepositoryBlackListToken()))
+				createFile(path, "middleware.go", strings.TrimSpace(code.Middleware(projectName)))
+				createFile(path, "model.go", strings.TrimSpace(code.ModelBlackListToken(projectName)))
+				createFile(path, "repository.go", strings.TrimSpace(code.RepositoryBlackListToken()))
 			}
 		}
 	}
