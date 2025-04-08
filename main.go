@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"github.com/fsnotify/fsnotify"
+	"github.com/joho/godotenv"
 )
 
 var cmd *exec.Cmd
@@ -127,16 +128,22 @@ func debounceRestart() {
 }
 
 func setPort(args []string) bool {
-	if len(args) >= 2 {
-		port := args[1]
-		if num, err := strconv.Atoi(port); err == nil && num >= 7000 && num <= 9999 {
-			serverPort = port
-			return true
+	godotenv.Load()
+	if os.Getenv("PORT") == "" {
+		if len(args) >= 2 {
+			port := args[1]
+			if num, err := strconv.Atoi(port); err == nil && num >= 7000 && num <= 9999 {
+				serverPort = port
+				return true
+			}
+			fmt.Println("Port must be a number between 7000 - 9999")
+			return false
 		}
-		fmt.Println("Port must be a number between 7000 - 9999")
-		return false
+
+		serverPort = "8080"
+		return true
 	}
-	serverPort = "8080"
+	serverPort = os.Getenv("PORT")
 	return true
 }
 

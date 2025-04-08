@@ -16,7 +16,11 @@ func Run() {
 	router.Use(cors.Default())
 	//api := router.Group("/api")
 	//import your service in here...
-	router.Run(":8080")
+	port := "8080"
+	if os.Getenv("PORT") != "" {
+		port = os.Getenv("PORT")
+	}
+	router.Run(fmt.Sprintf(":%v", port))
 
 }
 	`
